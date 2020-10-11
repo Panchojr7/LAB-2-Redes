@@ -1,4 +1,4 @@
-# LAB-1-Redes "Convolución 2D"
+# LAB-2-Redes "Convolución 2D"
 Laboratorio N°2 Redes de Computadores 
   
 ## *Nota: 7.0*  
@@ -11,7 +11,7 @@ Laboratorio N°2 Redes de Computadores
 
 ### Dependencias:
  
- Se debe tener instaladas las librerías **Scipy**, **numpy** y **matplotlib**.
+ Se debe tener instaladas las librerías **numpy** y **matplotlib**.
 
 ### Para ejecutar:  
 Ejuecutar a través de Vscode o Spyder (**altamente recomendado**).
