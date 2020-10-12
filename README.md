@@ -14,9 +14,11 @@ Laboratorio N°2 Redes de Computadores
  Se debe tener instaladas las librerías **numpy** y **matplotlib**.
 
 ### Para ejecutar:  
-Ejuecutar a través de Vscode o Spyder (**altamente recomendado**).
+Ejecutar a través de Vscode o Spyder (**altamente recomendado**).
 
 # **Detalles:** 
 
 ### Consideraciones:
-El programa contiene todos sus textos en español, lo que puede signifcar un descuento en la revisión ya que en ocasiones solicitan tener el código completo en inglés.
+La convolución fue testeada con éxito, el parámetro para definir esto fue dado gracias a la página [https://setosa.io/ev/image-kernels/] desde la cual se extrajo el kernel Embosy con el que fue realizado el testing.
+
+El programa puede demorarse desde 30 segundos hasta 2 minutos dependiendo de las especificaciones del computador, darle su tiempo.
