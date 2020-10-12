@@ -1,4 +1,4 @@
-﻿'''
+'''
 LABORATORIO 2: CONVOLUCION 2D
 
 Estudiante: Francisco Rousseau
@@ -8,25 +8,23 @@ Profesor: Carlos González
 '''
 
 ######################## LIBRERIAS ########################
-import scipy as sp
-from scipy import fftpack
 import numpy as np
 import matplotlib.image as mpi
 import matplotlib.pyplot as mpp
 
 ######################## FUNCIONES ########################
 
-# Retorna la imagen que se encuentra en la ruta especificada (en escala de grises).
+# Retorna la imagen que se encuentra en la ruta especificada (en escala de grises!!).
 #
 # Entrada: 
 #   ruta            - string correspondiente a la ruta de la imagen
 #
 # Salida:
-#   img             - arreglo que contiene los datos de la imagen
+#   img             - arreglo que contiene los datos de la imagen normalizada
 
 def leerImagen(ruta):
     img = mpi.imread(ruta)
-    return img
+    return img / 255 
 
 # Guarda la imagen que se encuentra en la ruta especificada, comprueba si es filtro
 # o no para aplicar el cmap gris.
@@ -39,7 +37,7 @@ def leerImagen(ruta):
 
 def guardarImagen(img, ruta, titulo, filtro):
     if filtro:
-        mpp.imshow(img, cmap="gray")
+        mpp.imshow(img, cmap="gray",vmin=0, vmax=1)
     else:
         mpp.imshow(img)
     mpp.title(titulo)
@@ -56,7 +54,7 @@ def guardarImagen(img, ruta, titulo, filtro):
 
 def visualizarImagen(img, titulo, filtro):
     if filtro:
-        mpp.imshow(img, cmap="gray")
+        mpp.imshow(img, cmap="gray",vmin=0, vmax=1)
     else:
         mpp.imshow(img)
     mpp.title(titulo)
@@ -78,7 +76,8 @@ def matrizCero(imagen, kernel):
     
     PosFilaMC = NFilasKernel - 1
     PosColuMC = NColuKernel - 1 
-    PosFilaImg = PosColuImg = 0
+    PosFilaImg = 0
+    PosColuImg = 0
 
     matriz0 = np.zeros((NFilasImg + 2 * PosFilaMC, NColuImg + 2 * PosColuMC))
 
@@ -108,7 +107,7 @@ def convolucion2D(imagen, kernel):
     NFilasMC, NColuMC = matriz0.shape
 
     # Kernel e indicadores
-    kernel = np.fliplr(np.flipud(kernel))
+    kernel = np.flipud(np.fliplr(kernel))
     NFilasKernel, NColuImg = kernel.shape
 
     # Iteradores #
@@ -125,11 +124,12 @@ def convolucion2D(imagen, kernel):
             for fk in range(NFilasKernel):
 
                 for ci in range(NColuImg):
-                    suma += kernel[fk][ci] * matriz0[fila + fk][col + ci] 
+                    suma += kernel[fk][ci] * matriz0[fila + fk][col + ci]
             convolucion[PosFilaConvolucion].append(suma)
 
         PosFilaConvolucion += 1
     return convolucion
+
 
 # Calcula la transformada de Fourier en 2D para una imagen dada.
 #
@@ -152,15 +152,38 @@ def fourier(imagen):
 
 ######################## EJECUCION PROGRAMA ########################
 
+## Creacion de filtros ##
+filtroBordes = np.array([[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1]]).astype('float') # Kernel Bordes
+filtroSuavizado = np.array([[1,4,6,4,1],[4,16,24,16,4],[6,24,36,24,6],[4,16,24,16,4],[1,4,6,4,1]]).astype('float') * (1/256) # Kernel Gauss
+
+
+###### Testing  ######
+filtroEmbosy = np.array([[-2,-1,0],[-1,1,1],[0,1,2]]).astype('float') # Kernel Embosy para testing
+
+print('... Inicio Testing ...')
+print('* Las imagenes de testing no son almacenadas *')
+test = leerImagen('img-test.gif')
+visualizarImagen(test,'Imagen de Testing',True)
+print('Testeando Convolucion 2D con kernel 3x3 "Ebmosy"')
+testConv = convolucion2D(test, filtroEmbosy)
+visualizarImagen(testConv,'Test Convolucion',True)
+print('Testeando kernel Filtro Suavizado')
+testFS = convolucion2D(test, filtroSuavizado)
+visualizarImagen(testFS,'Test Suavizada',True)
+print('Testeando kernel Filtro de Bordes')
+testFB = convolucion2D(test, filtroBordes)
+visualizarImagen(testFB,'Test Bordes',True)
+print('... Fin Testing ...')
+######################
+
 ## Lectura de imagen ##
 imagen = leerImagen('leena512.bmp')
+
 
 ## Mapeo de imagen original ##
 visualizarImagen(imagen,'Imagen Original',True)
 
-## Creacion de filtros ##
-filtroBordes = np.array([[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1]]).astype('float64') #KernelBordes
-filtroSuavizado = np.array([[1,4,6,4,1],[4,16,24,16,4],[6,24,36,24,6],[4,16,24,16,4],[1,4,6,4,1]]).astype('float64') * (1/256) #KernelGauss
+
 
 ###### Filtros  ######
 
